@@ -1,0 +1,64 @@
+import React from "react";
+
+export default class Create_user extends React.Component
+{
+    constructor(props)
+    {
+        super(props)
+        this.state={
+            name:"",
+            email:""
+        }
+    }
+
+    handle1=(e)=>{
+        this.setState({
+            name:e.target.value
+        })
+    }
+
+    handle2=(e)=>{
+        this.setState({
+            email:e.target.value
+        })
+    }
+
+    submit_user=()=>{
+        const axios = require('axios'); 
+        const requestParam = {
+        method: 'post',
+            url:"http://localhost:5000/addUser",
+            data:{
+                "name":this.state.name,
+                "email":this.state.email
+            }
+        }
+        axios(requestParam)
+        .then(response=>alert("user added"+response.data[1]))
+        .catch(err=>alert("user already exist"));        
+    }
+
+    render()
+    {        
+        const align_verticle={
+            position:"relative",
+            top:200
+        }
+        const a_style={
+            width: 18+"rem"
+        }
+        return(
+            <React.Fragment>
+                <div className="container d-flex justify-content-center" style={align_verticle}>
+                    <div className="card shadow-lg p-3 mb-5 bg-white rounded" style={a_style}>
+                        <div className="row form-group d-flex justify-content-center m-3 ">
+                            <input className="m-2" type="text" value={this.state.name} onChange={this.handle1} placeholder="Enter Name" />
+                            <input className="m-2" type="text" value={this.state.email} onChange={this.handle2}  placeholder="Phone" />
+                            <button className="btn btn-outline-success m-2" onClick={this.submit_user}>Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </React.Fragment>
+        );
+    }
+}
