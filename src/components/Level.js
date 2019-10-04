@@ -1,8 +1,6 @@
 import React from "react";
-import {Link,Route} from "react-router-dom";
-import Display_user from "./Display_user";
 
-export default class All_user extends React.Component
+export default class Level extends React.Component
 {
     constructor(props)
     {
@@ -12,14 +10,9 @@ export default class All_user extends React.Component
         }
     }
 
-    show_details=()=>
-    {
-
-    }
-    
     handle=(e)=>
     {
-        this.props.history.push(`/user/${e.target.value}`);
+        this.props.history.push(`/level/${e.target.value}`);
     }  
          
     componentDidMount()
@@ -33,8 +26,9 @@ export default class All_user extends React.Component
             } )
             .catch(err => console.log(err));
     }
+    
     render()
-    {       
+    {
         console.log(this.state.alldata)
         return(
             <React.Fragment>
@@ -48,7 +42,7 @@ export default class All_user extends React.Component
                                             <option  key={index} value={ele._id.$oid}>{ele.name}</option>
                                         );
                                     })}                                
-                            </select>                        
+                            </select>                            
                         </div>                        
                     </div>                    
                 </div>

@@ -7,7 +7,7 @@ export default class Create_user extends React.Component
         super(props)
         this.state={
             name:"",
-            email:""
+            phone:""
         }
     }
 
@@ -19,7 +19,7 @@ export default class Create_user extends React.Component
 
     handle2=(e)=>{
         this.setState({
-            email:e.target.value
+            phone:e.target.value
         })
     }
 
@@ -30,11 +30,11 @@ export default class Create_user extends React.Component
             url:"http://localhost:5000/addUser",
             data:{
                 "name":this.state.name,
-                "email":this.state.email
+                "phone":this.state.phone
             }
         }
         axios(requestParam)
-        .then(response=>alert("user added"+response.data[1]))
+        .then(response=>console.log(response))
         .catch(err=>alert("user already exist"));        
     }
 
@@ -53,7 +53,7 @@ export default class Create_user extends React.Component
                     <div className="card shadow-lg p-3 mb-5 bg-white rounded" style={a_style}>
                         <div className="row form-group d-flex justify-content-center m-3 ">
                             <input className="m-2" type="text" value={this.state.name} onChange={this.handle1} placeholder="Enter Name" />
-                            <input className="m-2" type="text" value={this.state.email} onChange={this.handle2}  placeholder="Phone" />
+                            <input className="m-2" type="text" value={this.state.phone} onChange={this.handle2}  placeholder="Phone" />
                             <button className="btn btn-outline-success m-2" onClick={this.submit_user}>Submit</button>
                         </div>
                     </div>

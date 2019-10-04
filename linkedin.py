@@ -9,22 +9,34 @@ app=Flask(__name__)
 app.config["MONGO_URI"]="mongodb://localhost:27017/circle"
 mongo=PyMongo(app)
 
+@app.route("/show")
+def show_user():
+    data=mongo.db.users.find()
+    print(data)
+    return dumps(data)
+
+@app.route("/showblog")
+def show_blog():
+    data=mongo.db.blogs.find()
+    print(data)
+    return dumps(data)
+
+@app.route("/blogcomments")
+def show_blogcomments():
+    data=mongo.db.blog_comment.find()
+    print(data)
+    return dumps(data)
 
 @app.route("/addUser", methods=["POST"])
 def add_user():
-    count=0
-    phone_count=0
-    Array={}
-    for x in range(1,100):
-        Array["_id"] = ObjectId()
-        #  print(x)
-        count=count+1
-        Array["name"]=request.json["name"]+str(count)
-        phone_count=phone_count+2
-        Array["phone"]=request.json["phone"]+str(phone_count)
-        # #     print(id)
-        mongo.db.users.insert(Array)
-    return dumps("success")
+    id = ObjectId()
+    # userId=request.json["userId"]
+    #  print(x)
+    name=request.json["name"]
+    phone=request.json["phone"]
+    # #     print(id)
+    mongo.db.users.insert({"_id":id,"name":name,"phone":phone})
+    return dumps([id,name,phone])
 
 @app.route("/blogs", methods=["POST"])
 def blog():
@@ -38,22 +50,38 @@ def blog():
         mongo.db.blogs.insert({"_id":id,"head":head+str(x),"text":text+str(x+1)})
     return dumps("success")
 
-@app.route("/blogs/<ObjectId:blogId>/comments/<ObjectId:userId>", methods=["GET","POST"])
-def blog_comments(blogId,userId):
-    comment_store=request.json["comment"]
-    mongo.db.blogs.update({"_id":blogId},{"$push":{"comment":{"comment_store":comment_store,"userId":userId}}})
-    return dumps(comment_store)
+@app.route("/add_blog/<ObjectId:userId>", methods=["POST"])
+def addblog(userId):
+    id = ObjectId()
+    head=request.json["head"]
+    text=request.json["text"]
+    mongo.db.blogs.insert({"_id":id,"head":head,"text":text,"userId":userId})
+    return dumps("success")
 
-@app.route("/blogs/<ObjectId:blogId>/comments/<ObjectId:userId>", methods=["GET","POST"])
-def blog_comments(blogId,userId):
-    comment_store=request.json["comment"]
-    mongo.db.blogs.update({"_id":blogId},{"$push":{"comment":{"comment_store":comment_store,"userId":userId}}})
-    return dumps(comment_store)
+# @app.route("/blogs/<ObjectId:blogId>/comments/<ObjectId:userId>", methods=["GET","POST"])
+# def blog_comments(blogId,userId):
+#     comment_store=request.json["comment"]
+#     mongo.db.blogs.update({"_id":blogId},{"$push":{"comment":{"comment_store":comment_store,"userId":userId}}})
+#     return dumps(comment_store)
 
-@app.route("/users/<ObjectId:userId>/level", methods=["GET"])
-def blog_comments(userId):
-    # if levelNo==1:
-    data=mongo.db.blogs.find({"comment[0].userId":userId})
+# @app.route("/blogs/<ObjectId:blogId>/comments/<ObjectId:userId>", methods=["GET","POST"])
+# def blog_comments(blogId,userId):
+#     comment_store=request.json["comment"]
+#     mongo.db.blogs.update({"_id":blogId},{"$push":{"comment":{"comment_store":comment_store,"userId":userId}}})
+#     return dumps(comment_store)
 
-    # mongo.db.blogs.update({"_id":blogId},{"$push":{"comment":{"comment_store":comment_store,"userId":userId}}})
-    return dumps(data)
+# @app.route("/users/<ObjectId:userId>", methods=["GET"])
+# def blog_comments(userId):
+#     # if levelNo==1:
+#     data=mongo.db.blog_comment.find({"comment.user_id":userId})
+#     for i in data:
+#         for a in i:
+#             print(a)
+#     # mongo.db.blogs.update({"_id":blogId},{"$push":{"comment":{"comment_store":comment_store,"userId":userId}}})
+#     return dumps(data)
+
+# @app.route("/users/<ObjectId:userId>/level>", methods=["GET"])
+# def blog_comments(userId):
+#     data=mongo.db.blogs.find({"_id":userId})
+#     # mongo.db.blogs.update({"_id":blogId},{"$push":{"comment":{"comment_store":comment_store,"userId":userId}}})
+#     return dumps(data)
